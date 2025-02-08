@@ -1,9 +1,10 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import {thunk} from "redux-thunk"; // Correct import
-import { productListReducer } from '../src/reducers/productReducers'; // Correct import
+import { productListReducer, productDetailReducer } from '../src/reducers/productReducers'; // Correct import
 
 const reducer = combineReducers({
     productList: productListReducer,
+    productDetails: productDetailReducer
 });
 
 const cartItemsFromStorage = localStorage.getItem("cartItem")
