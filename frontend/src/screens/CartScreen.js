@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function CartSceen() {
+export default function CartScreen() {
   return (
     <div>
       Cart
