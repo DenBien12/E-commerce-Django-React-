@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Row, Col, ListGroup, Image, Button, Card, ListGroupItem } from 'react-bootstrap'
 import Form from 'react-bootstrap/Form';
 import Message from '../components/Message'
-import { addToCart } from '../actions/cartActions'
+import { addToCart, removeFromCart } from '../actions/cartActions'
 
 
 export default function CartScreen() {
@@ -27,6 +27,7 @@ export default function CartScreen() {
   }, [dispatch, productId, qty])
 
   const removeFromCartHandler = (id) => {
+    dispatch(removeFromCart(id))
     console.log('remove', id)
   }
 
@@ -90,19 +91,19 @@ export default function CartScreen() {
                             <h2>Subtotal ({cartItems.reduce((acc, item) => acc + item.qty, 0)}) items</h2>
                             ${cartItems.reduce((acc, item) => acc + item.qty * item.price, 0).toFixed(2)}
                         </ListGroup.Item>
-                    </ListGroup>
+                    
 
                     <ListGroup.Item>
                         <Button
                             type='button'
-                            className="w-100"
+                            className="btn-block w-100"
                             disabled={cartItems.length === 0}
                             onClick={checkoutHandler}
                         >
                             Proceed To Checkout
                         </Button>
                     </ListGroup.Item>
-
+                  </ListGroup>
 
                 </Card>
             </Col>
