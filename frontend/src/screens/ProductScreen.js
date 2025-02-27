@@ -19,7 +19,7 @@ function ProductScreen() {
 
   useEffect(()=>{
       dispatch(listProductDetails(match.id))
-      console.log(qty)
+      
   },[])
 
   const addToCartHandler = () => {
