@@ -18,7 +18,7 @@ import { USER_LOGIN_REQUEST,
         }
 
         const { data } = await axios.post(
-            '/api/users/login',
+            '/api/users/login/',
             { 'username': email, 'password': password },
             config
         )
@@ -38,4 +38,9 @@ import { USER_LOGIN_REQUEST,
                 : error.message,
         })
     }
+}
+
+export const logout = () => (dispatch) => {
+    localStorage.removeItem('userInfo')
+    dispatch({ type: USER_LOGOUT })
 }
