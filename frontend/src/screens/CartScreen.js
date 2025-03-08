@@ -28,7 +28,6 @@ export default function CartScreen() {
 
   const removeFromCartHandler = (id) => {
     dispatch(removeFromCart(id))
-    console.log('remove', id)
   }
 
   const checkoutHandler = () => {
