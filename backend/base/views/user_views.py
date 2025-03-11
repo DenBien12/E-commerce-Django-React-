@@ -55,7 +55,7 @@ def getUsersProfile(request):
 @permission_classes([IsAuthenticated])
 def updateUsersProfile(request):
     user = request.user
-    serialier = UserSerializer(user, many=False)
+    serialier = UserSerializerWithToken(user, many=False)
 
     data = request.data
     user.first_name = data['name']
