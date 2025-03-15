@@ -8,6 +8,9 @@ import { addToCart, removeFromCart } from '../actions/cartActions'
 
 
 export default function CartScreen() {
+
+  const userLogin = useSelector(state => state.userLogin)
+  const { userInfo } = userLogin
   const navigate = useNavigate()
   const location = useLocation()
   const params = useParams()
@@ -31,7 +34,13 @@ export default function CartScreen() {
   }
 
   const checkoutHandler = () => {
-     navigate('/login?redirect=shipping')
+    if (userInfo) {
+      // If user is logged in, go directly to shipping
+      navigate('/shipping')
+    } else {
+      // If user is not logged in, redirect to login with shipping as redirect
+      navigate('/login?redirect=shipping')
+    }
   }
 
   return (
