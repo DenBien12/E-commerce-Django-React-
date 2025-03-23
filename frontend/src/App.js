@@ -8,7 +8,10 @@ import CartScreen from './screens/CartScreen'
 import LoginScreen from './screens/LoginScreen'
 import RegisterScreen from './screens/RegisterScreen'
 import ProfileScreen from '../src/screens/ProfileScreen'
-import ShippingScreen from './screens/ShippingScreen'
+import ShippingScreen from '../src/screens/ShippingScreen'
+import PaymentScreen from '../src/screens/PaymentScreen'
+
+
 
 function App() {
   return (
@@ -24,6 +27,7 @@ function App() {
             <Route path='/profile' element={<ProfileScreen />} exact />
             <Route path='/product/:id' element={<ProductScreen />} />
             <Route path='/cart/:id?' element={<CartScreen />} />
+            <Route path='/payment' element={<PaymentScreen />} />
           </Routes>
         </Container>
       </main>
