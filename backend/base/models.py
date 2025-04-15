@@ -46,7 +46,7 @@ class Order(models.Model):
     def __str__(self):
         return str(self.createAt)
     
-class OrderItem(models.Model):
+class OrderIterm(models.Model):
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
     order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True)
     name = models.CharField(max_length=200, null=False, blank=False)
