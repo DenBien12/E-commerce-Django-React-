@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useMemo} from 'react'
 import { Row,Col,ListGroup,Card, Button, ListGroupItem} from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import Message from '../components/Message'
@@ -8,10 +8,27 @@ import { Image } from 'react-bootstrap'
 
 function PlaceOrderScreen() {
     const cart = useSelector(state => state.cart)
+    const prices = useMemo(() => {
+        const itemsPrice = cart.cartItems.reduce(
+            (acc, item) => acc + item.price * item.qty, 
+            0
+        ).toFixed(2)
+        
+        const shippingPrice = (Number(itemsPrice) > 100 ? 0 : 10).toFixed(2)
+        const taxPrice = ((0.082) * Number(itemsPrice)).toFixed(2)
+        const totalPrice = (
+            Number(itemsPrice) + 
+            Number(shippingPrice) + 
+            Number(taxPrice)
+        ).toFixed(2)
 
-    cart.itemsPrice = cart.cartItems.reduce((acc, item) => acc + item.price * item.qty,0).toFixed(2)
-    cart.shippingPrice = (cart.itemsPrice >100 ? 0 : 10).toFixed(2)
-    cart.taxPrice = ((0.082) * cart.itemsPrice).toFixed(2)
+        return {
+            itemsPrice,
+            shippingPrice,
+            taxPrice,
+            totalPrice
+        }
+    }, [cart.cartItems])
     const placeOrder = () => {
         console.log("Place Order")
     }
@@ -37,7 +54,6 @@ function PlaceOrderScreen() {
                 <ListGroup.Item>
                     <h2>Order Items</h2>
 
-                    <p>
                         {cart.cartItems.lenght === 0 ? <Message variant='info'>
                             Your cart is empty!
                         </Message> :(
@@ -61,7 +77,7 @@ function PlaceOrderScreen() {
                             </ListGroup>
                         )
                         }
-                    </p>
+                
                 </ListGroup.Item>
 
                 <ListGroup.Item>
