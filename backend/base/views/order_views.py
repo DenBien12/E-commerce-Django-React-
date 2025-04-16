@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 
 
-from base.models import Product, Order, OrderIterm, ShippingAddress
+from base.models import Product, Order, OrderItem, ShippingAddress
 from django.contrib.auth.models import User
 from base.serializers import ProductSerializer, ShippingAddressSerializer, OrderSerializer
 
@@ -11,48 +11,51 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework import status
 
-@api_view(['POSt'])
-@permission_classes(['IsAuthenticated'])
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def addOrderItems(request):
     user = request.user 
     data = request.data
 
-    OrderIterm = data['orderItems']
+    order_items = data['orderItems']  # Rename the variable to avoid conflict
 
-    if OrderIterm and len(OrderIterm) == 0:
-        return Response({'detail': 'No Order Items'}, status=status.HTTP_404_NOT_FOUND )
+    if order_items and len(order_items) == 0:
+        return Response({'detail': 'No Order Items'}, status=status.HTTP_404_NOT_FOUND)
     else:
-        #(1) Create order
+        # (1) Create order
         order = Order.objects.create(
-            user =user,
+            user=user,
             paymentMethod=data['paymentMethod'],
-            taxPrice = data['taxPrice'],
-            shippingPrice = data['shippingPrice '],
-            totalPrice = data['totalPrice']
+            taxPrice=data['taxPrice'],
+            shippingPrice=data['shippingPrice'],
+            totalPrice=data['totalPrice']
         )
-        #(2) Create shipping address
+
+        # (2) Create shipping address
         shipping = ShippingAddress.objects.create(
-            order = order,
-            address = data['shippingAddress']['address'],
-            city = data['shippingAddress']['city'],
-            postalCode = data['shippingAddress']['postalCode'],
-            country = data['shippingAddress']['country']
+            order=order,
+            address=data['shippingAddress']['address'],
+            city=data['shippingAddress']['city'],
+            postalCode=data['shippingAddress']['postalCode'],
+            country=data['shippingAddress']['country']
         )
 
-        #(3) Create order items and set order to orderITem relationship
-        for i in OrderIterm:
-            product =  Product.objects.get(_id=i['product'])
+        # (3) Create order items and set order to orderItem relationship
+        for i in order_items:  # Use the renamed variable
+            product = Product.objects.get(_id=i['product'])
 
-            item  = OrderIterm.objects.create(
-                product = product,
-                order = order,
-                name = product.name,
-                qty=i['price'],
-                image = product.image.url,
+            item = OrderItem.objects.create(  # Correct model name is `OrderIterm`
+                product=product,
+                order=order,
+                name=product.name,
+                qty=i['qty'],  # Corrected field name from `price` to `qty`
+                price=i['price'],  # Add the price field
+                image=product.image.url,
             )
-        #(4) Update stock
-        product.countInStock -= item.qty
-        product.save() 
-        serializer = OrderSerializer(order, many=True)
 
-    return Response(serializer.data)
+            # (4) Update stock
+            product.countInStock -= item.qty
+            product.save()
+
+        serializer = OrderSerializer(order, many=False)  # `many=True` is incorrect for a single order
+        return Response(serializer.data)

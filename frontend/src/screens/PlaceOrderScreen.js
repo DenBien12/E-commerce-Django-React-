@@ -5,8 +5,12 @@ import Message from '../components/Message'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import CheckoutSteps  from '../components/CheckoutSteps'
 import { Image } from 'react-bootstrap'
+import { createOrder } from '../actions/orderActions'
 
 function PlaceOrderScreen() {
+    const orderCreate = useSelector(state => state.orderCreate)
+    const { order, success, error } = createOrder
+
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const cart = useSelector(state => state.cart)
@@ -37,8 +41,32 @@ function PlaceOrderScreen() {
             navigate('/payment');
         }
     }, [cart.paymentMethod, navigate]);
+    useEffect(() => {
+        if (success) {
+            navigate(`/order/${order._id}`);
+        } [success, order,navigate]})
+
     const placeOrder = () => {
-        console.log("Place Order")
+        console.log({
+            orderItems: cart.cartItems,
+            shippingAddress: cart.shippingAddress,
+            paymentMethod: cart.paymentMethod,
+            itemsPrice: cart.itemsPrice,
+            shippingPrice: prices.shippingPrice,
+            taxPrice: prices.taxPrice,
+            totalPrice: prices.totalPrice
+        })
+        dispatch(
+            createOrder({
+                orderItems: cart.cartItems,
+                shippingAddress: cart.shippingAddress,
+                paymentMethod: cart.paymentMethod,
+                itemsPrice: prices.itemsPrice,
+                shippingPrice: prices.shippingPrice,
+                taxPrice: prices.taxPrice,
+                totalPrice: prices.totalPrice
+            })
+        )
     }
   return (
     <div>
