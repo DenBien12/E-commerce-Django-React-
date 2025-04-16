@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react'
+import React, {useMemo, useEffect} from 'react'
 import { Row,Col,ListGroup,Card, Button, ListGroupItem} from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import Message from '../components/Message'
@@ -7,6 +7,8 @@ import CheckoutSteps  from '../components/CheckoutSteps'
 import { Image } from 'react-bootstrap'
 
 function PlaceOrderScreen() {
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
     const cart = useSelector(state => state.cart)
     const prices = useMemo(() => {
         const itemsPrice = cart.cartItems.reduce(
@@ -29,6 +31,12 @@ function PlaceOrderScreen() {
             totalPrice
         }
     }, [cart.cartItems])
+
+    useEffect(() => {
+        if (!cart.paymentMethod) {
+            navigate('/payment');
+        }
+    }, [cart.paymentMethod, navigate]);
     const placeOrder = () => {
         console.log("Place Order")
     }
@@ -48,6 +56,15 @@ function PlaceOrderScreen() {
                         {cart.shippingAddress.postalCode},
                         {' '}
                         {cart.shippingAddress.country}
+                    </p>
+                </ListGroup.Item>
+
+                <ListGroup.Item>
+                    <h2>Payment Method</h2>
+
+                    <p>
+                        <strong>Method: </strong>
+                        {cart.paymentMethod}
                     </p>
                 </ListGroup.Item>
 
@@ -80,14 +97,6 @@ function PlaceOrderScreen() {
                 
                 </ListGroup.Item>
 
-                <ListGroup.Item>
-                    <h2>Payment Method</h2>
-
-                    <p>
-                        <strong>Method: </strong>
-                        {cart.paymentMethod}
-                    </p>
-                </ListGroup.Item>
             </ListGroup>
         </Col>
         <Col md={4}>
@@ -100,40 +109,42 @@ function PlaceOrderScreen() {
                     <ListGroup.Item>
                         <Row>
                             <Col>Item:</Col>
-                            <Col>${cart.itemsPrice}</Col>
+                            <Col>${prices.itemsPrice}</Col>
                         </Row>
                     </ListGroup.Item>
 
                     <ListGroup.Item>
                         <Row>
                             <Col>Shipping:</Col>
-                            <Col>${cart.shippingPrice}</Col>
+                            <Col>${prices.shippingPrice}</Col>
                         </Row>
                     </ListGroup.Item>
 
                     <ListGroup.Item>
                         <Row>
                             <Col>Tax: </Col>
-                            <Col>${cart.taxPrice}</Col>
+                            <Col>${prices.taxPrice}</Col>
                         </Row>
                     </ListGroup.Item>
 
                     <ListGroup.Item>
                         <Row>
                             <Col>Total:</Col>
-                            <Col>${cart.totalPrice}</Col>
+                            <Col>${prices.totalPrice}</Col>
                         </Row>
                     </ListGroup.Item>
 
                     <ListGroup.Item>
+                    <div>
                         <Button 
                             type="button"
-                            className='btn-block'
+                            className='btn-block w-100'
                             disabled={cart.cartItems ===0}
                             onClick={placeOrder}
                         > 
                         Place Order
                         </Button>
+                    </div>
                     </ListGroup.Item>
                 </ListGroup>
             </Card>
