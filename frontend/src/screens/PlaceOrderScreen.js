@@ -2,7 +2,7 @@ import React, {useMemo, useEffect} from 'react'
 import { Row,Col,ListGroup,Card, Button, ListGroupItem} from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import Message from '../components/Message'
-import { Link, useNavigate, useLocation } from 'react-router-dom'
+import { Link, useNavigate} from 'react-router-dom'
 import CheckoutSteps  from '../components/CheckoutSteps'
 import { Image } from 'react-bootstrap'
 import { createOrder } from '../actions/orderActions'
@@ -45,11 +45,10 @@ function PlaceOrderScreen() {
             navigate('/payment');
         }
         if (success) {
-            console.log('Navigating to:', `/order/${order._id}`);
             navigate(`/order/${order._id}`);
             dispatch({ type: ORDER_CREATE_RESET });
         }
-    }, [success, order, navigate]);
+    }, [success, order, navigate, dispatch]);
 
     const placeOrder = () => {
         dispatch(

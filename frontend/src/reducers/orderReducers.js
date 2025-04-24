@@ -2,7 +2,9 @@ import {
     ORDER_CREATE_REQUEST,
     ORDER_CREATE_SUCCESS,
     ORDER_CREATE_FAIL,
+
     ORDER_CREATE_RESET,
+
     ORDER_DETAILS_REQUEST,
     ORDER_DETAILS_SUCCESS,
     ORDER_DETAILS_FAIL,
@@ -11,24 +13,39 @@ import {
 export const orderCreateReducer = (state = {}, action) => {
     switch (action.type) {
         case ORDER_CREATE_REQUEST:
-            return { loading: true };
-        case ORDER_CREATE_SUCCESS:
-            return { loading: false, success: true, order: action.payload }; // Ensure success and order are updated
-        case ORDER_CREATE_FAIL:
-            return { loading: false, error: action.payload };
-        case ORDER_CREATE_RESET:
-            return {}; // Reset the state when the order is created successfully
-        default:
-            return state;
-    }
-};
+            return {
+                loading: true
+            }
 
-export const orderDetailsReducer = (state = {loading: true, orderItems: [], shippingAddress:{} }, action) => {
-    switch (action.type){
+        case ORDER_CREATE_SUCCESS:
+            return {
+                loading: false,
+                success: true,
+                order: action.payload
+            }
+
+        case ORDER_CREATE_FAIL:
+            return {
+                loading: false,
+                error: action.payload
+            }
+
+        case ORDER_CREATE_RESET:
+            return {}
+
+
+        default:
+            return state
+    }
+}
+
+export const orderDetailsReducer = (
+    state = { loading: true, order: { orderItems: [], shippingAddress: {} } },
+    action
+) => {
+    switch (action.type) {
         case ORDER_DETAILS_REQUEST:
-            return { 
-            ...state, // Spread the existing state to keep orderItems and shippingAddress intact
-                loading: true };
+            return { ...state, loading: true };
         case ORDER_DETAILS_SUCCESS:
             return { loading: false, order: action.payload };
         case ORDER_DETAILS_FAIL:
@@ -36,4 +53,4 @@ export const orderDetailsReducer = (state = {loading: true, orderItems: [], ship
         default:
             return state;
     }
-}
+};
