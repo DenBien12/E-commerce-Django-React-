@@ -20,7 +20,6 @@ function OrderScreen() {
             
             dispatch(getOrderDetails(orderID));
         }
-        console.log('Order in useEffect:', order); // Debug log
     }, [dispatch, order, orderID]);
 
     const prices = useMemo(() => {
