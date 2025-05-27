@@ -34,8 +34,6 @@ function App() {
             <Route path='/placeorder' element={<PlaceOrderScreen />} />
             <Route path='/order/:id' element={<OrderScreen />} />
             <Route path='/admin/userlist' element={<UserListScreen />} />
-            {/* Add more routes as needed */}
-
           </Routes>
         </Container>
       </main>

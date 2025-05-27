@@ -29,13 +29,22 @@ function Header() {
             <Nav.Link as={Link} to='/cart'><i className='fas fa-shopping-cart'></i>Cart</Nav.Link>
 
             {userInfo ? (
-              <NavDropdown title={userInfo.name} id='username'>
+              <NavDropdown title={userInfo.name} id='username' className='me-2'>
                 <NavDropdown.Item as={Link} to='/profile'>Profile</NavDropdown.Item>
                 <NavDropdown.Item onClick={logoutHander}>Logout</NavDropdown.Item>
               </NavDropdown>
             ):(
               <Nav.Link as={Link} to='/login'><i className='fas fa-user'></i>Login</Nav.Link>
             )}
+
+            {userInfo && userInfo.isAdmin && (
+              <NavDropdown title='Admin' id='adminmenu' >
+                <NavDropdown.Item as={Link} to='/admin/userlist'>Users</NavDropdown.Item>
+                <NavDropdown.Item as={Link} to='/admin/productlist'>Products</NavDropdown.Item>
+                <NavDropdown.Item as={Link} to='/admin/orderlist'>Orders</NavDropdown.Item>
+              </NavDropdown>
+            )}
+              
             
           </Nav>
         </Navbar.Collapse>
