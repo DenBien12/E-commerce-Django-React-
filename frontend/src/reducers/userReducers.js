@@ -58,7 +58,6 @@ export const userRegisterReducer = (state = {}, action) => {
         case USER_REGISTER_FAIL:
             return { loading: false, error: action.payload }
 
-
         default:
             return state
     }
@@ -131,7 +130,6 @@ export const userDeleteReducer = (state = {}, action) => {
 
         case USER_DELETE_FAIL:
             return { loading: false, error: action.payload }
-
 
         default:
             return state

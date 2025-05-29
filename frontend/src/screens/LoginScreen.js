@@ -57,7 +57,7 @@ function LoginScreen( {} ) {
                 ></Form.Control>
             </Form.Group>
 
-            <Button className= "mt-3" type='submit' variant='primary'>
+            <Button className= "mt-3"type='submit' variant='primary'>
                 Sign In
             </Button>
       </Form>
