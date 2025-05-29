@@ -12,5 +12,5 @@ urlpatterns = [
     path('profile/update/', views.updateUsersProfile, name="users-profile-update"),
     path('', views.getUsers, name="users"),
 
-    
+    path('delete/<str:pk>/', views.deleteUser, name="user-delete"),
 ]
