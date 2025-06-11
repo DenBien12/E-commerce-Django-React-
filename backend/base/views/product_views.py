@@ -14,7 +14,7 @@ from rest_framework import status
 from django.contrib.auth.hashers import make_password
 
 
-@api_view(['GET'])
+@api_view(['GET']) 
 def getProducts(request):
     products = Product.objects.all()
     serialier = ProductSerializer(products, many=True)
@@ -26,6 +26,23 @@ def getProduct(request, pk):
     product = Product.objects.get(_id=pk)
     serialier = ProductSerializer(product, many=False)
     return Response(serialier.data)
+
+@api_view(['POST'])
+@permission_classes([IsAdminUser])
+def createProduct(request):
+    user = request.user
+    product = Product.objects.create(
+        user=user,
+        name='Sample Name',
+        price = 0,
+        brand='Sample Brand',
+        countInStock=0,
+        category='Sample Category',
+        description='',
+    )
+    serialier = ProductSerializer(product, many=False)
+    return Response(serialier.data)
+
 
 @api_view(['DELETE'])
 @permission_classes([IsAdminUser])
