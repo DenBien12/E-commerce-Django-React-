@@ -9,7 +9,7 @@ import { getUserDetails, updateUser } from '../actions/userActions'
 import { USER_UPDATE_RESET } from '../constants/userConstants'
 
 
-function EditUserScreen() {
+function UserEditScreen() {
     const { id: userId } = useParams()
 
     const [name, setName] = useState('')
@@ -106,4 +106,4 @@ function EditUserScreen() {
   )
 }
 
-export default EditUserScreen
+export default UserEditScreen
