@@ -9,5 +9,7 @@ urlpatterns = [
     path('myorders/', views.getMyOrders, name='myorders'),
     path('<str:pk>/', views.getOrderbyID, name='user-order'),
     path('', views.getOrders, name='orders'),
+
+    path('<str:pk>/deliver/', views.updateOrderToDeliverd, name='deliver'),
     path('<str:pk>/pay/', views.updateOrderToPaid, name='pay'),
 ]

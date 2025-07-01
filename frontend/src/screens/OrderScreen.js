@@ -1,16 +1,18 @@
 import React, { useEffect, useMemo } from 'react';
-import { Row, Col, ListGroup, Card, Image } from 'react-bootstrap';
+import { Row, Col, ListGroup, Card, Image, Button } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate, } from 'react-router-dom';
 import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
-import { getOrderDetails, payOrder } from '../actions/orderActions';
-import { ORDER_PAY_RESET } from '../constants/orderConstants';
+import { deliverOrder, getOrderDetails, payOrder } from '../actions/orderActions';
+import { ORDER_PAY_RESET, ORDER_DELIVER_RESET } from '../constants/orderConstants';
 
 function OrderScreen() {
   const { id: orderID } = useParams();
   const dispatch = useDispatch();
+
+  const navigate = useNavigate();
 
   const orderDetails = useSelector((state) => state.orderDetails);
   const { order, error, loading } = orderDetails;
@@ -18,17 +20,30 @@ function OrderScreen() {
   const orderPay = useSelector((state) => state.orderPay);
   const { loading: loadingPay, success: successPay } = orderPay;
 
+  const orderDeliver = useSelector((state) => state.orderDeliver);
+  const { loading: loadingDeliver, success: successDeliver } = orderDeliver;
+
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+
   useEffect(() => {
-    if (!order || successPay|| order._id !== Number(orderID)) {
+    if (!userInfo) {
+      navigate('/login');
+    }
+
+    if (!order || successPay|| order._id !== Number(orderID) || successDeliver) {
       dispatch({ type: ORDER_PAY_RESET });
+      dispatch({ type: ORDER_DELIVER_RESET });
       dispatch(getOrderDetails(orderID));
     }
-  }, [dispatch, order, orderID, successPay]);
+  }, [dispatch, order, orderID, successPay, successDeliver]);
 
   const successPaymentHandler = async (paymentResult) => {
-    console.log(paymentResult);
     dispatch(payOrder(orderID, paymentResult));
-    
+  };
+
+  const deliverOrderHandler = () => {
+    dispatch(deliverOrder(order));
   };
 
   const prices = useMemo(() => {
@@ -177,6 +192,17 @@ function OrderScreen() {
                 </ListGroup.Item>
               )}
             </ListGroup>
+            {loadingDeliver && <Loader />}
+              {userInfo && userInfo.isAdmin && order.isPaid && !order.isDelivered && (
+                <ListGroup.Item >
+                  <Button
+                    type="button"
+                    className="btn-block w-100"
+                    onClick={deliverOrderHandler}>
+                    Mark as Delivered
+                  </Button>
+                </ListGroup.Item>
+              )}
           </Card>
         </Col>
       </Row>

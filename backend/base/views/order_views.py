@@ -11,6 +11,7 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework import status
 from datetime import datetime
+from django.utils import timezone
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -99,3 +100,14 @@ def updateOrderToPaid(request, pk):
     order.paidAt = datetime.now()
     order.save()
     return Response('Order was paid')
+
+@api_view(['PUT'])
+@permission_classes([IsAdminUser])
+def updateOrderToDeliverd(request, pk):
+    order = Order.objects.get(_id=pk)
+
+    order.isDelivered = True
+    order.deliveredAt = timezone.now()
+    order.save()
+    return Response('Order was delivered')
+
