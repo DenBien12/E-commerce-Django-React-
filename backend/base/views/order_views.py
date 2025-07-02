@@ -110,4 +110,5 @@ def updateOrderToDeliverd(request, pk):
     order.deliveredAt = timezone.now()
     order.save()
     return Response('Order was delivered')
+    
 
