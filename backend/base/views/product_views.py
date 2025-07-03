@@ -82,39 +82,38 @@ def uploadImage(request):
 @permission_classes([IsAuthenticated])
 def createProductReview(request, pk):
     user = request.user
-    data = request.data
     product = Product.objects.get(_id=pk)
+    data = request.data
 
-    # Check if the user has already reviewed the product
+    # 1 - Review already exists
     alreadyExists = product.review_set.filter(user=user).exists()
-    rating = data.get('rating', 0)
-    comment = data.get('comment', '')
     if alreadyExists:
         content = {'detail': 'Product already reviewed'}
         return Response(content, status=status.HTTP_400_BAD_REQUEST)
-    
 
-    
-    # No rating or comment provided
-    elif rating == 0:
+    # 2 - No Rating or 0
+    elif data['rating'] == 0:
         content = {'detail': 'Please select a rating'}
         return Response(content, status=status.HTTP_400_BAD_REQUEST)
-    
-    # Create a new review
+
+    # 3 - Create review
     else:
         review = Review.objects.create(
             user=user,
             product=product,
             name=user.first_name,
             rating=data['rating'],
-            comment=data['comment']
+            comment=data['comment'],
         )
 
         reviews = product.review_set.all()
         product.numReviews = len(reviews)
-        toltal = 0
+
+        total = 0
         for i in reviews:
-            toltal += i.rating
-        product.rating = toltal / len(reviews)
+            total += i.rating
+
+        product.rating = total / len(reviews)
         product.save()
-        return Response('Review added')
+
+        return Response('Review Added')
