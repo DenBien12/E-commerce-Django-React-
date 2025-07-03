@@ -16,7 +16,11 @@ from django.contrib.auth.hashers import make_password
 
 @api_view(['GET']) 
 def getProducts(request):
-    products = Product.objects.all()
+    query = request.query_params.get('keyword')
+    if query == None:
+        query = ''
+    products = Product.objects.filter(
+        name__icontains=query)
     serialier = ProductSerializer(products, many=True)
     return Response(serialier.data)
 
