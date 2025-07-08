@@ -38,7 +38,7 @@ function ProductScreen() {
     }
       dispatch(listProductDetails(match.id))
       
-  },[dispatch, match.id, successProductReview])
+  },[dispatch, match.id, successProductReview, loadingProductReview, errorProductReview])
 
   const addToCartHandler = () => {
     navigate(`/cart/${match.id}?qty=${qty}`)

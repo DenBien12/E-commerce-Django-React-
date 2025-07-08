@@ -21,7 +21,7 @@ def getProducts(request):
     if query == None:
         query = ''
     products = Product.objects.filter(
-        name__icontains=query)
+        name__icontains=query).order_by('createdAt')
     
     page = request.query_params.get('page')
     paginator = Paginator(products, 2)  
@@ -40,6 +40,11 @@ def getProducts(request):
     serialier = ProductSerializer(products, many=True)
     return Response({'products':serialier.data, 'page': page, 'pages': paginator.num_pages})
 
+@api_view(['GET'])
+def getTopProducts(request):
+    product = Product.objects.filter(rating__gte = 3).order_by('-rating')[0:5]
+    serialier = ProductSerializer(product, many=True)
+    return Response(serialier.data)
 
 @api_view(['GET'])
 def getProduct(request, pk):
